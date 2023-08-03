@@ -1,6 +1,7 @@
 #### For demultiplexing the run change so that: R1 and Read2 is indexed, Read3 and Read4 is not
 #### Demultiplex with the following command by the RT index and i7 index:
 # /bin/nice -n 5 bcl-convert --output-directory fastqsSN --sample-sheet SampleSheet_2023_07_13_SN.csv --bcl-input-directory /dd_rundata/novaseq/Runs/230713_A00690_H5NLYDRX3_118/
+# /bin/nice -n 5 bcl-convert --output-directory fastqs --sample-sheet SampleSheet_2023_07_27_SN.csv --bcl-input-directory /dd_rundata/novaseq/Runs/230727_A00690_H5VKMDRX3_121
 
 #### Run this pipeline with:
 # /bin/nice -n10 snakemake -s /home/dmakosa/working_data_04/scifi/bin/scifiRNAseq.smk --use-conda --default-resources "tmpdir='/scratchfs/dmakosa/tmp'" --cores 80
@@ -25,6 +26,14 @@
 # cat <(echo -e "Sample,PCT_R1_TRANSCRIPT_STRAND_READS,PCT_R2_TRANSCRIPT_STRAND_READS,PCT_CODING_BASES,PCT_UTR_BASES,PCT_INTRONIC_BASES,PCT_INTERGENIC_BASES,PCT_MRNA_BASES,PCT_USABLE_BASES") \
 # <(for i in output/3.RNAMetrics/*firstStrand; do echo ${i/output*\//} | sed s,'.RNA_Metrics_firstStrand',, | tr '\n' ','; cat $i | grep PF_BASES -A1 | cut -f14,15,17-22 | tail -n1 | tr '\t' ','; done) \
 # > RNAMetrics.summary.csv
+
+### To plot the mapping summary:
+# python /home/dmakosa/working_data_04/scifi/plots/mapping_summary.py /home/dmakosa/working_data_02/scifiRNAseq/mapping.summary.csv /home/dmakosa/working_data_02/scifiRNAseq/plots 'Median UMI per Cell'
+# python /home/dmakosa/working_data_04/scifi/plots/mapping_summary.py /home/dmakosa/working_data_02/scifiRNAseq/mapping.summary.csv /home/dmakosa/working_data_02/scifiRNAseq/plots 'Median GeneFull per Cell'
+# python /home/dmakosa/working_data_04/scifi/plots/mapping_summary.py /home/dmakosa/working_data_02/scifiRNAseq/mapping.summary.csv /home/dmakosa/working_data_02/scifiRNAseq/plots 'Fraction of Unique Reads in Cells'
+# python /home/dmakosa/working_data_04/scifi/plots/mapping_summary.py /home/dmakosa/working_data_02/scifiRNAseq/mapping.summary.csv /home/dmakosa/working_data_02/scifiRNAseq/plots 'Sequencing Saturation'
+
+# python /home/dmakosa/working_data_04/scifi/plots/ribosomal_summary.py /home/dmakosa/working_data_02/scifiRNAseq/ribosomalMapped.summary.csv /home/dmakosa/working_data_02/scifiRNAseq/plots 'FractionRibosomal'
 
 # ---- DICTIONARIES ---- #
 configfile: "/home/dmakosa/working_data_04/scifi/bin/config.yaml"
